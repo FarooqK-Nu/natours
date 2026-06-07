@@ -29,7 +29,12 @@ exports.getTour = async (req, res) => {
         tour,
       },
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(400).json({
+      status: 'failed',
+      message: error,
+    });
+  }
 };
 
 exports.createTour = async (req, res) => {
