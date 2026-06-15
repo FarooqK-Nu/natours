@@ -5,16 +5,32 @@ const express = require('express');
 const morgan = require('morgan');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const globalErrorHandler = require('./controllers/errorController');
+const AppError = require('./utils/appError');
 
 const app = express();
 
 // Middlewares
 app.use(morgan('dev')); // for redability in terminal
 app.use(express.json()); // middleware for req.data object
+app.set('query parser', 'extended'); // parses the req.query correctly
+app.use(express.static(`${__dirname}/public`));
 
 // mounting routes to url
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+
+// Handleing all unhandeled routes
+app.all('/{*splat}', (req, res, next) => {
+  const err = new AppError(
+    `the route ${req.originalUrl} is not on the server`,
+    404,
+  );
+  next(err);
+});
+
+// Error Handling Middleware
+app.use(globalErrorHandler);
 
 module.exports = app;
 

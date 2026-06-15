@@ -7,15 +7,21 @@
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "start:Prod": "cross-env NODE_ENV=production nodemon server.js",
+    "start:Dev": "cross-env NODE_ENV=development nodemon server.js",
+    "debug": "ndb server.js"
   },
   "dependencies": {
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "mongoose": "^9.5.0",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "slugify": "^1.6.9",
+    "validator": "^13.15.35"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^10.1.8",
@@ -25,5 +31,8 @@
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react": "^7.37.5",
     "prettier": "^3.8.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }
