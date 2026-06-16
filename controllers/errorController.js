@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const JWT = require('jsonwebtoken');
 const AppError = require('./../utils/appError');
 
 const errDEV = (err, res) => {
@@ -42,6 +44,12 @@ const handleMongooseValidationError = (err) => {
   return new AppError(`Invalid input data. ${messages.join('. ')}`, 400);
 };
 
+const handleJwtWebTokenError = (err) =>
+  new AppError('Invalid JWT token, cannot verify user. Please try again!', 401);
+
+const handleJwtExpiredError = (err) =>
+  new AppError('Your token has expired!, kindy login again', 401);
+
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'failed';
@@ -49,16 +57,18 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     errDEV(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error;
-    if (err instanceof mongoose.Error.CastError) {
+    let error = err;
+    if (err instanceof mongoose.Error.CastError)
       error = handleMongooseCastError(err);
-    }
-    if (err.code === 11000) {
-      error = handleMongoDuplicateError(err);
-    }
-    if (err instanceof mongoose.Error.ValidationError) {
+
+    if (err.code === 11000) error = handleMongoDuplicateError(err);
+
+    if (err instanceof mongoose.Error.ValidationError)
       error = handleMongooseValidationError(err);
-    }
+
+    if (err instanceof JWT.JsonWebTokenError) err = handleJwtWebTokenError(err);
+
+    if (err instanceof JWT.TokenExpiredError) err = handleJwtExpiredError(err);
 
     errPROD(error, res);
   }
