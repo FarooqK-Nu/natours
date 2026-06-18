@@ -4,6 +4,15 @@
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const helmet = require('helmet');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const mongoSanatize = require('express-mongo-sanitize');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const xss = require('xss-clean');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const hpp = require('hpp');
+
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const globalErrorHandler = require('./controllers/errorController');
@@ -22,8 +31,29 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-app.use(express.json()); // middleware for req.data object
-app.set('query parser', 'extended'); // parses the req.query correctly
+// using helmet for security headers
+app.use(
+  helmet({
+    contentSecurityPolicy: true,
+  }),
+);
+
+// data sanatization against NOSQL query injection
+app.use(mongoSanatize());
+
+// data sanatization against XSS
+app.use(xss());
+
+// prevents parameter pollution
+app.use(hpp());
+
+// middleware for req.data object
+app.use(express.json({ limit: '10kb' }));
+
+// parses the req.query correctly
+app.set('query parser', 'extended');
+
+// serving static files
 app.use(express.static(`${__dirname}/public`));
 
 // mounting routes to url

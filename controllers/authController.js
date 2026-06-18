@@ -20,7 +20,7 @@ const createSendResponse = (user, code, res, includeUser = true) => {
     ),
     httpOnly: true,
   };
-
+  // send jwt via cookies
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   res.cookie('jwt', token, cookieOptions);
 
@@ -92,7 +92,7 @@ exports.protect = async (req, res, next) => {
       401,
     );
 
-  // 4) check if user changed passworf after token was issued
+  // 4) check if user changed password after token was issued
   if (currUser.changedPasswordAfter(decode.iat)) {
     throw new AppError(
       'User recently changed password, Please login again',
