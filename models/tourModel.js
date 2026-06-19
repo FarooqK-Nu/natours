@@ -64,6 +64,12 @@ const tourSchema = new mongoose.Schema(
     slug: String,
     startLocation: pointSchema.pointSchema,
     locations: [pointSchema.pointSchemaWithDay],
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User', // refernceing the user doc
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -84,6 +90,14 @@ tourSchema.pre('save', function () {
 /* eslint-disable-next-line prefer-arrow-callback */
 tourSchema.pre(/^find/, function () {
   // this.find({ secretTour: false });
+});
+
+// populating the guides
+tourSchema.pre(/^find/, function () {
+  this.populate({
+    path: 'guides',
+    select: '-_v -passwordChangedAt',
+  });
 });
 
 /* eslint-disable-next-line prefer-arrow-callback */

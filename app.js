@@ -3,6 +3,7 @@
 // IMPORTS///////////////
 const express = require('express');
 const morgan = require('morgan');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const rateLimit = require('express-rate-limit');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const helmet = require('helmet');
@@ -15,6 +16,7 @@ const hpp = require('hpp');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
@@ -59,6 +61,7 @@ app.use(express.static(`${__dirname}/public`));
 // mounting routes to url
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 // Handleing all unhandeled routes
 app.all('/{*splat}', (req, res, next) => {
