@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 // eslint-disable-next-line import/no-extraneous-dependencies
 // const validator = require('validator');
+const pointSchema = require('./pointSchema');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -61,6 +62,8 @@ const tourSchema = new mongoose.Schema(
     },
     startDates: [Date],
     slug: String,
+    startLocation: pointSchema.pointSchema,
+    locations: [pointSchema.pointSchemaWithDay],
   },
   {
     toJSON: { virtuals: true },

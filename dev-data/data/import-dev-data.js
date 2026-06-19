@@ -17,9 +17,7 @@ mongoose
   .catch((err) => console.log(`Database Connection failed 💥💥: ${err}`));
 
 // Read json file
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8'),
-);
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 //import data to DB
 const importData = async () => {
   try {
