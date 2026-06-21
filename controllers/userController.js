@@ -1,5 +1,6 @@
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
+const factory = require('./handlerFactory');
 
 const getFilteredObj = (obj, allowedFields) => {
   const newObj = {};
@@ -10,39 +11,23 @@ const getFilteredObj = (obj, allowedFields) => {
   });
 };
 
-// user handlers
-exports.getAllUsers = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'this route is not def RN',
-  });
+exports.getME = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
 };
 
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'this route is not def RN',
-  });
-};
+// user handlers
+exports.getAllUsers = factory.getAll(User);
+exports.getUser = factory.getOne(User);
+
+// Do NOT update passwords with this! no Mongoose validation prob
+exports.updateUser = factory.updateOne(User);
+exports.deleteUser = factory.deleteOne(User);
 
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
-    message: 'this route is not def RN',
-  });
-};
-
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'this route is not def RN',
-  });
-};
-
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'this route is not def RN',
+    message: 'this route is not defined! Please use /signup instead',
   });
 };
 

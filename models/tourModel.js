@@ -28,8 +28,8 @@ const tourSchema = new mongoose.Schema(
     ratingsAverage: {
       type: Number,
       default: 4.5,
-      max: 5,
-      min: 0,
+      max: [5, 'Rating must be under 5,0'],
+      min: [0, 'Rating must be above 0.0'],
     },
     ratingsQuantity: {
       type: Number,
@@ -77,6 +77,10 @@ const tourSchema = new mongoose.Schema(
     strict: 'throw',
   },
 );
+
+// compund index
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
 
 tourSchema.virtual('durationInWeeks').get(function () {
   return Number((this.duration / 7).toFixed(2)); //think of it like adding this get method onto constructor of schema

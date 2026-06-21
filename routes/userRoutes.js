@@ -8,16 +8,17 @@ router.route('/signup').post(authController.signup);
 router.route('/login').post(authController.login);
 router.route('/forgotPassword').post(authController.forgotPassword);
 router.route('/resetPassword/:token').patch(authController.resetPassword);
-router
-  .route('/updateMyPassword')
-  .patch(authController.protect, authController.updatePassword); // currently signed in user wants to change password
 
-router
-  .route('/updateMe')
-  .patch(authController.protect, userController.updateMe);
-router
-  .route('/deleteMe')
-  .delete(authController.protect, userController.deleteMe);
+// protect all routes that come after this middleware
+router.use(authController.protect);
+
+router.route('/updateMyPassword').patch(authController.updatePassword); // currently signed in user wants to change password
+
+router.route('/updateMe').patch(userController.updateMe);
+router.route('/deleteMe').delete(userController.deleteMe);
+router.route('/me').get(userController.getME, userController.getUser);
+
+router.use(authController.restrictTo('admin'));
 
 router
   .route('/')
