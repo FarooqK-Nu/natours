@@ -82,6 +82,12 @@ tourSchema.virtual('durationInWeeks').get(function () {
   return Number((this.duration / 7).toFixed(2)); //think of it like adding this get method onto constructor of schema
 });
 
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
+
 // pre save hook
 tourSchema.pre('save', function () {
   this.slug = slugify(this.name, { lower: true }); // we have access to this keyword

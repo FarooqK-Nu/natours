@@ -1,8 +1,13 @@
 const express = require('express');
 const tourController = require('./../controllers/tourController');
 const authController = require('./../controllers/authController');
+const reviewRouter = require('./reviewRoutes');
 
 const router = express.Router();
+
+// NESTED ROUTE
+// POST /tour/id(2423353)/reviews -> POST to tour 2423353 a review
+router.use('/:tourId/reviews', reviewRouter); //offload to review router cuz its a review req
 
 router
   .route('/top-5-cheap')

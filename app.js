@@ -8,9 +8,9 @@ const rateLimit = require('express-rate-limit');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const helmet = require('helmet');
 // eslint-disable-next-line import/no-extraneous-dependencies
-const mongoSanatize = require('express-mongo-sanitize');
+// const mongoSanatize = require('express-mongo-sanitize');
 // eslint-disable-next-line import/no-extraneous-dependencies
-const xss = require('xss-clean');
+// const xss = require('xss-clean');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const hpp = require('hpp');
 
@@ -41,10 +41,10 @@ app.use(
 );
 
 // data sanatization against NOSQL query injection
-app.use(mongoSanatize());
+// app.use(mongoSanatize());
 
 // data sanatization against XSS
-app.use(xss());
+// app.use(xss());
 
 // prevents parameter pollution
 app.use(hpp());
