@@ -63,17 +63,23 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
       },
     },
   ]);
-
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating,
-  });
+  if (stats.length > 0)
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+  else
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5,
+    });
 };
+
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
 
 reviewSchema.post(/save|^findOne/, async (doc) => {
   if (doc) {
-    // eslint-disable-next-line no-use-before-define
-    await Review.calcAverageRatings(doc.tour); //doc.tour has id of the tour
+    await doc.constructor.calcAverageRatings(doc.tour); //doc.tour has id of the tour, also the doc.constructor reffers to the current Model (Review)
   }
 });
 

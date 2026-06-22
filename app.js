@@ -1,6 +1,7 @@
 //this file is the main heart that will recieve and delegate the functionality to each file (Think of it as a central dispatcher)
 
 // IMPORTS///////////////
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -21,6 +22,9 @@ const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
 const app = express();
+// setting up pug
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 
 // Middlewares
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev')); // for redability in terminal
@@ -56,9 +60,12 @@ app.use(express.json({ limit: '10kb' }));
 app.set('query parser', 'extended');
 
 // serving static files
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // mounting routes to url
+app.use('/', (req, res) => {
+  res.status(200).render('base');
+});
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
