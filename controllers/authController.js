@@ -71,8 +71,9 @@ exports.protect = async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
-
   if (!token) {
     throw new AppError(
       'you are not logged IN !, Please login to get acccess',
@@ -102,7 +103,38 @@ exports.protect = async (req, res, next) => {
 
   // 5) call next middleware Auth successfull, access granted
   req.user = currUser;
+  res.locals.user = currUser;
   next();
+};
+
+exports.isLoggedIn = async (req, res, next) => {
+  if (!req.cookies.jwt) {
+    return next();
+  }
+
+  // 2) token verification
+  const verify = promisify(JWT.verify);
+  const decode = await verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
+
+  // 3) check if user still exists
+  const currUser = await User.findById(decode.id);
+  if (!currUser) return next();
+
+  // 4) check if user changed password after token was issued
+  if (currUser.changedPasswordAfter(decode.iat)) return next();
+
+  // 5) call next middleware Auth successfull, access granted
+  res.locals.user = currUser;
+  next();
+};
+
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+
+  res.status(200).json({ status: 'success' });
 };
 
 exports.restrictTo =

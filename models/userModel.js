@@ -37,7 +37,10 @@ const userSchema = new mongoose.Schema({
       message: 'Both password must Match',
     },
   },
-  photo: String,
+  photo: {
+    type: String,
+    default: 'default.jpg',
+  },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,

@@ -14,10 +14,13 @@ const helmet = require('helmet');
 // const xss = require('xss-clean');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const hpp = require('hpp');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const cookieParser = require('cookie-parser');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRoutes = require('./routes/viewRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
@@ -40,7 +43,31 @@ app.use('/api', limiter);
 // using helmet for security headers
 app.use(
   helmet({
-    contentSecurityPolicy: true,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        baseUri: ["'self'"],
+        scriptSrc: ["'self'", 'https://api.mapbox.com'],
+        workerSrc: ["'self'", 'blob:'],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        styleSrcElem: [
+          "'self'",
+          "'unsafe-inline'",
+          'https://fonts.googleapis.com',
+          'https://api.mapbox.com',
+        ],
+        connectSrc: [
+          "'self'",
+          'http://localhost:3000',
+          'http://127.0.0.1:3000',
+          'https://*.mapbox.com',
+          'https://api.mapbox.com',
+          'ws://localhost:*',
+          'ws://127.0.0.1:*',
+        ],
+      },
+    },
   }),
 );
 
@@ -51,10 +78,12 @@ app.use(
 // app.use(xss());
 
 // prevents parameter pollution
-app.use(hpp());
+// app.use(hpp());
 
 // middleware for req.data object
 app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded);
+app.use(cookieParser());
 
 // parses the req.query correctly
 app.set('query parser', 'extended');
@@ -63,9 +92,7 @@ app.set('query parser', 'extended');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // mounting routes to url
-app.use('/', (req, res) => {
-  res.status(200).render('base');
-});
+app.use('/', viewRoutes);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);

@@ -13,7 +13,9 @@
     "debug": "ndb server.js"
   },
   "dependencies": {
+    "axios": "^1.18.1",
     "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-mongo-sanitize": "^2.2.0",
