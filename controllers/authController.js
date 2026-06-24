@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const { promisify } = require('util');
 const User = require('./../models/userModel');
 const AppError = require('./../utils/appError');
-const sendEmail = require('./../utils/email');
+const Email = require('./../utils/email');
 
 const signToken = (id) =>
   JWT.sign({ id }, process.env.JWT_SECRET_KEY, {
@@ -42,6 +42,8 @@ exports.signup = async (req, res) => {
   const safeUser = newUser.toObject(); // dont show it to end user
   delete safeUser.password;
 
+  const url = `${req.protocol}://${req.get('host')}/me`;
+  await new Email(safeUser, url).sendWelcome();
   //send token
   createSendResponse(safeUser, 201, res);
 };
@@ -157,14 +159,10 @@ exports.forgotPassword = async (req, res) => {
 
   // 3) send it to users email
   const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
-  const message = `Forgot your password? send a PATCH request with your new password and confirm password to ${resetURL}.\nIf you didn't forget your password please ignore this email. `;
 
   try {
-    await sendEmail({
-      email: req.body.email,
-      subject: 'Your password reset token (valid for 10 mins)',
-      message,
-    });
+    await new Email(user, resetURL).sendPasswordReset();
+
     res.status(200).json({
       status: 'success',
       message: 'Token send to email!',
