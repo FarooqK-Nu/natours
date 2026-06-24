@@ -15,7 +15,13 @@ router.use(authController.protect);
 
 router.route('/updateMyPassword').patch(authController.updatePassword); // currently signed in user wants to change password
 
-router.route('/updateMe').patch(userController.updateMe);
+router
+  .route('/updateMe')
+  .patch(
+    userController.uploadUserPhoto,
+    userController.resizeUserPhoto,
+    userController.updateMe,
+  );
 router.route('/deleteMe').delete(userController.deleteMe);
 router.route('/me').get(userController.getME, userController.getUser);
 

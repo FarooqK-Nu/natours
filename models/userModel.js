@@ -4,52 +4,55 @@ const validator = require('validator');
 const bycrpt = require('bcryptjs');
 const crypto = require('crypto');
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please enter your name'],
-  },
-  role: {
-    type: String,
-    enum: ['admin', 'user', 'guide', 'lead-guide'],
-    default: 'user',
-  },
-  email: {
-    type: String,
-    required: [true, 'Please procvide your email'],
-    unique: true,
-    lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
-  },
-  password: {
-    type: String,
-    required: [true, 'Please enter a password'],
-    minlength: 8,
-    select: false,
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'Please enter a password'],
-    validate: {
-      validator: function (el) {
-        return this.password === el;
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Please enter your name'],
+    },
+    role: {
+      type: String,
+      enum: ['admin', 'user', 'guide', 'lead-guide'],
+      default: 'user',
+    },
+    email: {
+      type: String,
+      required: [true, 'Please procvide your email'],
+      unique: true,
+      lowercase: true,
+      validate: [validator.isEmail, 'Please provide a valid email'],
+    },
+    password: {
+      type: String,
+      required: [true, 'Please enter a password'],
+      minlength: 8,
+      select: false,
+    },
+    passwordConfirm: {
+      type: String,
+      required: [true, 'Please enter a password'],
+      validate: {
+        validator: function (el) {
+          return this.password === el;
+        },
+        message: 'Both password must Match',
       },
-      message: 'Both password must Match',
+    },
+    photo: {
+      type: String,
+      default: 'default.jpg',
+    },
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    active: {
+      type: Boolean,
+      default: true,
+      select: false,
     },
   },
-  photo: {
-    type: String,
-    default: 'default.jpg',
-  },
-  passwordChangedAt: Date,
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  active: {
-    type: Boolean,
-    default: true,
-    select: false,
-  },
-});
+  { strict: 'throw' },
+);
 
 userSchema.pre('save', async function () {
   // run only if password was modified
