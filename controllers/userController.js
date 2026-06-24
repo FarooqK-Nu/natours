@@ -1,6 +1,10 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+const multer = require('multer');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const factory = require('./handlerFactory');
+
+// handing imgs with multer
 
 const getFilteredObj = (obj, allowedFields) => {
   const newObj = {};

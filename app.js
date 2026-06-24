@@ -78,11 +78,11 @@ app.use(
 // app.use(xss());
 
 // prevents parameter pollution
-// app.use(hpp());
+app.use(hpp());
 
 // middleware for req.data object
 app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded);
+app.use(express.urlencoded({ extended: true })); // to parse data coming from a form
 app.use(cookieParser());
 
 // parses the req.query correctly
