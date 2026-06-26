@@ -5,16 +5,24 @@
   "license": "ISC",
   "author": "Farooq khan",
   "type": "commonjs",
-  "main": "app.js",
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ],
   "scripts": {
     "start": "nodemon server.js",
     "start:Prod": "cross-env NODE_ENV=production nodemon server.js",
     "start:Dev": "cross-env NODE_ENV=development nodemon server.js",
-    "debug": "ndb server.js"
+    "debug": "ndb server.js",
+    "dev": "parcel src/js/index.js --dist-dir public/js --public-url /js/ --cache-dir \"%TEMP%/natours-parcel-cache\"",
+    "build": "parcel build src/js/index.js --dist-dir public/js --public-url /js/ --cache-dir \"%TEMP%/natours-parcel-cache\""
   },
   "dependencies": {
     "axios": "^1.18.1",
     "bcryptjs": "^3.0.3",
+    "buffer": "^6.0.3",
+    "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
@@ -31,6 +39,7 @@
     "pug": "^3.0.4",
     "sharp": "^0.35.2",
     "slugify": "^1.6.9",
+    "stripe": "^22.3.0",
     "validator": "^13.15.35",
     "xss-clean": "^0.1.4"
   },
@@ -44,6 +53,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react": "^7.37.5",
+    "parcel": "^2.16.4",
     "prettier": "^3.8.1"
   },
   "engines": {

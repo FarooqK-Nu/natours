@@ -67,7 +67,7 @@ exports.aliasTopFiveCheap = (req, res, next) => {
     limit: '5',
     sort: 'price,ratingsAverage',
   };
-  console.log(req.queryObj);
+  // console.log(req.queryObj);
   next();
 };
 
