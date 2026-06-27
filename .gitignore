@@ -5,7 +5,10 @@ node_modules
 # environment variables
 .env
 .env.*
-.vscode
+config.env
+
+# editor settings
+.vscode/
 
 # parcel cache
 .parcel-cache/
