@@ -19,6 +19,9 @@ const compression = require('compression');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const cookieParser = require('cookie-parser');
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+const cors = require('cors');
+
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
@@ -28,13 +31,18 @@ const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
 const app = express();
+app.enable('trust proxy');
 // setting up pug
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // Middlewares
+app.use(cors());
+app.options('*', cors()); // options is a http method like get/post/del
+
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev')); // for redability in terminal
 
+app.set('trust proxy', 1);
 // applying rate limiting
 const limiter = rateLimit({
   max: 100,

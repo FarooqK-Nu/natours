@@ -45,3 +45,13 @@ process.on('unhandledRejection', (err) => {
     process.exit(1);
   });
 });
+
+// handling sigter signal from render
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received. Shutting down gracefully...');
+
+  server.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
+  });
+});
