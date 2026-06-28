@@ -16,8 +16,8 @@
     "start:Prod": "cross-env NODE_ENV=production nodemon server.js",
     "start:Dev": "cross-env NODE_ENV=development nodemon server.js",
     "debug": "ndb server.js",
-    "parcel-dev": "parcel src/js/index.js --dist-dir public/js --public-url /js/ --cache-dir \"%TEMP%/natours-parcel-cache\"",
-    "build": "parcel build src/js/index.js --dist-dir public/js --public-url /js/ --cache-dir \"%TEMP%/natours-parcel-cache\""
+    "parcel-dev": "parcel src/js/index.js --dist-dir public/js --public-url /js/",
+    "build": "parcel build src/js/index.js --dist-dir public/js --public-url /js/"
   },
   "dependencies": {
     "axios": "^1.18.1",
