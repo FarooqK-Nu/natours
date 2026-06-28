@@ -38,7 +38,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middlewares
 app.use(cors());
-app.options('*', cors()); // options is a http method like get/post/del
+app.options('/*splat', cors()); // options is a http method like get/post/del
 
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev')); // for redability in terminal
 
